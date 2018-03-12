@@ -16,6 +16,11 @@ class m180312_145557_create_languages_table extends Migration
             'id' => $this->primaryKey(),
             'language' => $this->string(),
         ]);
+        
+        $this->batchInsert('languages', ['language'], [
+            ['Русский'],
+            [ 'English']
+        ]);
     }
 
     /**

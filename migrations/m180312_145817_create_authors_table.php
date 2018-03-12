@@ -16,6 +16,19 @@ class m180312_145817_create_authors_table extends Migration
             'id' => $this->primaryKey(),
             'author' => $this->string(),
         ]);
+        
+        $this->batchInsert('authors', ['author'], [
+            ['CrazyNews'],
+            ['Чук и Гек'],
+            ['CatFuns'],
+            ['CarDriver'],
+            ['BestPics'],
+            ['ЗОЖ'],
+            ['Вася Пупкин'],
+            ['Готовим со вкусом'],
+            ['Шахтёрская Правда'],
+            ['FunScience']
+        ]);
     }
 
     /**
