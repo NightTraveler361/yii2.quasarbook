@@ -73,16 +73,23 @@ class SiteController extends Controller
             $langRowCount = Languages::find()->count();
             $langRowRand = rand(0, $langRowCount);
             $langRow = Languages::find()->limit(1)->offset($langRowRand-1)->one();
-            
+
             $authRowCount = Authors::find()->count();
             $authRowRand = rand(0, $authRowCount);
             $authRow = Authors::find()->limit(1)->offset($authRowRand-1)->one();
 
+            $timestamp = rand( strtotime("01.01.2017"), strtotime("09.09.2017") );
+            $dateRand = date("Y.m.d", $timestamp );
+
+            $likes = rand(1, 100);
+            
             $modelPosts->language_id = $langRow->id;
             $modelPosts->author_id = $authRow->id;
+            $modelPosts->date = $dateRand;
+            $modelPosts->likes = $likes;
             $modelPosts->save();
 
-            echo $authRow->id;
+            echo $likes;
 
         endfor;
 
