@@ -65,6 +65,32 @@ class SiteController extends Controller
     public function actionIndex()
     {
 
+        $arrTitleRu = array(
+            "жесть",
+            "удивительно",
+            "снова",
+            "совсем",
+            "шок",
+            "случай",
+            "сразу",
+            "событие",
+            "начало",
+            "вирус"
+        );
+
+        $titleEng = array(
+            "currency",
+            "amazing",
+            "again",
+            "absolutely",
+            "shocking",
+            "case",
+            "immediately",
+            "event",
+            "beginning",
+            "virus"
+        );
+
         for ($i = 0; $i < 5; $i++):
 
             $modelPosts = new Posts();
@@ -83,10 +109,25 @@ class SiteController extends Controller
 
             $likes = rand(1, 100);
 
+            $arrTitleFinal = [];
+        
+            $wordsCount = rand(4, 6);
+            $keysRand = array_rand($arrTitleRu, $wordsCount);
+
+            for ($j = 0; $j < $wordsCount; $j++):
+                array_push($arrTitleFinal, $arrTitleRu[$keysRand[$j]]);
+            endfor;
+
+            $strTitle = implode(" ", $arrTitleFinal);
+            
+            $titleFinal = mb_strtoupper(mb_substr($strTitle, 0, 1));
+            $titleFinal = $titleFinal.mb_substr($strTitle, 1);
+            
             $modelPosts->language_id = $langRow->id;
             $modelPosts->author_id = $authRow->id;
             $modelPosts->date = $dateRand;
             $modelPosts->likes = $likes;
+            $modelPosts->title = $titleFinal;
             $modelPosts->save();
 
         endfor;
