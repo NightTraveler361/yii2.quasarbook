@@ -78,7 +78,7 @@ class SiteController extends Controller
             "вирус"
         );
 
-        $titleEng = array(
+        $arrTitleEng = array(
             "currency",
             "amazing",
             "again",
@@ -89,6 +89,31 @@ class SiteController extends Controller
             "event",
             "beginning",
             "virus"
+        );
+
+        $arrTextRu = array(
+            "один", "еще", "бы", "такой", "только", "себя", "свое", "какой", "когда", "уже",
+            "для", "вот", "кто", "да", "говорить", "год", "знать", "мой", "до", "или", "если", "время",
+            "рука", "нет", "самый", "ни", "стать", "большой", "даже", "другой", "наш", "свой", "ну",
+            "под", "где", "дело", "есть", "сам", "раз", "чтобы", "два", "там", "чем", "глаз", "жизнь",
+            "первый", "день", "тута", "во", "ничто", "потом", "очень", "со", "хотеть", "ли", "при",
+            "голова", "надо", "без", "видеть", "идти", "теперь", "тоже", "стоять", "друг", "дом",
+            "сейчас", "можно", "после", "слово", "здесь", "думать", "место", "спросить", "через",
+            "лицо", "что", "тогда", "ведь", "хороший", "каждый", "новый", "жить", "должный",
+            "смотреть", "почему", "потому", "сторона", "просто", "нога", "сидеть", "понять", "иметь",
+            "конечный", "делать", "вдруг", "над", "взять", "никто", "сделать"
+        );
+
+        $arrTextEng = array(
+            "one", "yet", "would", "such", "only", "yourself", "his", "what", "when", "already",
+            "for", "behold", "Who", "yes", "speak", "year", "know", "my", "before", "or", "if", "time", "arm",
+            "no", "most", "nor", "become", "big", "even", "other", "our", "his", "well", "under", "where",
+            "a business", "there is", "himself", "time", "that", "two", "there", "than", "eye", "a life", "first",
+            "day", "mulberry", "in", "nothing", "later", "highly", "with", "to want", "whether", "at", "head",
+            "need", "without", "see", "go", "now", "also", "stand", "friend", "house", "now", "can", "after",
+            "word", "here", "think", "a place", "ask", "across", "face", "what", "then", "after all", "good",
+            "each", "new", "live", "due", "look", "why", "because", "side", "just", "leg", "sit", "understand",
+            "have", "finite", "do", "all of a sudden", "above", "to take", "no one", "make"
         );
 
         for ($i = 0; $i < 5; $i++):
@@ -110,12 +135,15 @@ class SiteController extends Controller
 
             $likes = rand(1, 100);
 
+
             if ($language === 'Русский'):
                 $arrTitle = $arrTitleRu;
+                $arrText = $arrTextRu;
             else:
-                $arrTitle = $titleEng;
+                $arrTitle = $arrTitleEng;
+                $arrText = $arrTextEng;
             endif;
-            
+
             $arrTitleFinal = [];        
             $wordsCount = rand(4, 6);
             $keysRand = array_rand($arrTitle, $wordsCount);
@@ -125,16 +153,34 @@ class SiteController extends Controller
             endfor;
 
             $strTitle = implode(" ", $arrTitleFinal);
-            
+
             $titleFinal = mb_strtoupper(mb_substr($strTitle, 0, 1));
             $titleFinal = $titleFinal.mb_substr($strTitle, 1);
 
+            $textFinal = '';
+
+            for ($l = 0; $l < rand(3, 4); $l++):
+                $arrSentence = [];        
+                $wordsCount = rand(5, 8);
+                $keysRand = array_rand($arrText, $wordsCount);
+
+                for ($k = 0; $k < $wordsCount; $k++):
+                    array_push($arrSentence, $arrText[$keysRand[$k]]);
+                endfor;
+
+                $strSentence = implode(" ", $arrSentence);
+
+                $sentence = mb_strtoupper(mb_substr($strSentence, 0, 1));
+                $sentence = $sentence.mb_substr($strSentence, 1).'. ';
+                $textFinal .= $sentence;
+            endfor;
 
             $modelPosts->language_id = $langRow->id;
             $modelPosts->author_id = $authRow->id;
             $modelPosts->date = $dateRand;
             $modelPosts->likes = $likes;
             $modelPosts->title = $titleFinal;
+            $modelPosts->text = substr($textFinal, 0, -1);
             $modelPosts->save();
 
         endfor;
