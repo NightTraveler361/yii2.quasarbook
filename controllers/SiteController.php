@@ -9,6 +9,9 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Posts;
+use app\models\Languages;
+use app\models\Authors;
 
 class SiteController extends Controller
 {
@@ -61,6 +64,28 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
+        for ($i = 0; $i < 5; $i++):
+
+            $modelPosts = new Posts();
+            $modelLanguages = new Languages();
+
+            $langRowCount = Languages::find()->count();
+            $langRowRand = rand(0, $langRowCount);
+            $langRow = Languages::find()->limit(1)->offset($langRowRand-1)->one();
+            
+            $authRowCount = Authors::find()->count();
+            $authRowRand = rand(0, $authRowCount);
+            $authRow = Authors::find()->limit(1)->offset($authRowRand-1)->one();
+
+            $modelPosts->language_id = $langRow->id;
+            $modelPosts->author_id = $authRow->id;
+            $modelPosts->save();
+
+            echo $authRow->id;
+
+        endfor;
+
         return $this->render('index');
     }
 
