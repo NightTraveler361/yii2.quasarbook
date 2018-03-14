@@ -97,11 +97,12 @@ class SiteController extends Controller
             $modelLanguages = new Languages();
 
             $langRowCount = Languages::find()->count();
-            $langRowRand = rand(0, $langRowCount);
+            $langRowRand = rand(1, $langRowCount);
             $langRow = Languages::find()->limit(1)->offset($langRowRand-1)->one();
+            $language = Languages::find()->where(['id' => $langRowRand])->one()->language;
 
             $authRowCount = Authors::find()->count();
-            $authRowRand = rand(0, $authRowCount);
+            $authRowRand = rand(1, $authRowCount);
             $authRow = Authors::find()->limit(1)->offset($authRowRand-1)->one();
 
             $timestamp = rand( strtotime("01.01.2017"), strtotime("09.09.2017") );
@@ -109,20 +110,26 @@ class SiteController extends Controller
 
             $likes = rand(1, 100);
 
-            $arrTitleFinal = [];
-        
+            if ($language === 'Русский'):
+                $arrTitle = $arrTitleRu;
+            else:
+                $arrTitle = $titleEng;
+            endif;
+            
+            $arrTitleFinal = [];        
             $wordsCount = rand(4, 6);
-            $keysRand = array_rand($arrTitleRu, $wordsCount);
+            $keysRand = array_rand($arrTitle, $wordsCount);
 
             for ($j = 0; $j < $wordsCount; $j++):
-                array_push($arrTitleFinal, $arrTitleRu[$keysRand[$j]]);
+                array_push($arrTitleFinal, $arrTitle[$keysRand[$j]]);
             endfor;
 
             $strTitle = implode(" ", $arrTitleFinal);
             
             $titleFinal = mb_strtoupper(mb_substr($strTitle, 0, 1));
             $titleFinal = $titleFinal.mb_substr($strTitle, 1);
-            
+
+
             $modelPosts->language_id = $langRow->id;
             $modelPosts->author_id = $authRow->id;
             $modelPosts->date = $dateRand;
