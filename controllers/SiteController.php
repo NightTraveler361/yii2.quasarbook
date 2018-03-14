@@ -82,14 +82,12 @@ class SiteController extends Controller
             $dateRand = date("Y.m.d", $timestamp );
 
             $likes = rand(1, 100);
-            
+
             $modelPosts->language_id = $langRow->id;
             $modelPosts->author_id = $authRow->id;
             $modelPosts->date = $dateRand;
             $modelPosts->likes = $likes;
             $modelPosts->save();
-
-            echo $likes;
 
         endfor;
 
