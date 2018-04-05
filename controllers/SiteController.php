@@ -13,6 +13,7 @@ use app\models\Posts;
 use app\models\Languages;
 use app\models\Authors;
 use app\models\ArrPosts;
+use app\models\Form;
 
 class SiteController extends Controller
 {
@@ -73,16 +74,17 @@ class SiteController extends Controller
         $arrTextRu = $modelArrPosts->ArrTextRu;
         $arrTextEng = $modelArrPosts->ArrTextEng;
 
-        for ($i = 0; $i < 5; $i++):
+        $langRowCount = Languages::find()->count();
+        $authRowCount = Authors::find()->count();
+
+        for ($i = 0; $i < 0; $i++):
 
             $modelPosts = new Posts();
 
-            $langRowCount = Languages::find()->count();
             $langRowRand = rand(1, $langRowCount);
             $langRow = Languages::find()->limit(1)->offset($langRowRand-1)->one();
             $language = Languages::find()->where(['id' => $langRowRand])->one()->language;
 
-            $authRowCount = Authors::find()->count();
             $authRowRand = rand(1, $authRowCount);
             $authRow = Authors::find()->limit(1)->offset($authRowRand-1)->one();
 
@@ -141,7 +143,49 @@ class SiteController extends Controller
 
         endfor;
 
+        /* $select = Yii::$app->db->createCommand('SELECT * FROM languages')->queryAll();
+
+        echo '<pre>';
+            print_r($select);
+        echo '</pre>'; */
+
+        /* $insert = Yii::$app->db->createCommand()->batchInsert('posts', ['language_id', 'author_id'], [
+            [1, 7],
+            [2, 5],
+            [1, 2]
+        ]);
+
+        $insert->execute(); */
+
         return $this->render('index');
+    }
+
+    public function actionEntry()
+    {
+        $model = new Form();
+
+        /* if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // данные в $model удачно проверены
+
+            // делаем что-то полезное с $model ...
+ 
+            return $this->render('entry', ['model' => $model]);
+        } else {
+            // либо страница отображается первый раз, либо есть ошибка в данных
+            return $this->render('entry', ['model' => $model]);
+        } */
+
+        if(Yii::$app->request->isAjax){
+            if ($model->load(Yii::$app->request->post())) {
+                /* $work = $this->asJson($model); */
+                $work = '<tr><td class="checkBox"><input type="checkbox"></td>';
+                $work .= '<td>'.$model["work"].'</td>';
+                $work .= '</tr>';
+                return $work;
+            }
+            /* return 'Запрос принят!'; */
+        }
+        return $this->render('entry', ['model' => $model]);
     }
 
     /**
